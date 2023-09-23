@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  mariadb:
+    image: mariadb:latest
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata6:/data/db
+    environment:
+      - MARIADB_USER=bilal
+      - MARIADB_PASSWORD=root
+      - MARIADB_ROOT_PASSWORD=root
+volumes:
+  dbdata6:
