@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model addresses {
+  id Int   @id  @default(autoincrement())
+  line1 String? 
+  line2 Int?
+  city  String?
+  state String?
+  street_name String?
+  country     String?
+  phone       String?
+  pincode     String?
+  user_id     Int
+
+  user users @relation(fields: [user_id], references: [id])
+}
+
+
+// model categories {
+//   id  Int @id
+//   title  String
+// }
+//
+//
+// model orders {
+//   id   Int @id
+//   user_id Int
+//
+//   user users @relation([fields: [user_id], referances: [id]])
+// }
+//
+//
+// model orders_details {
+//   id  Int @id
+//   order_id Int
+//   product_id  Int
+//   quantity  Int  @default(1)
+//
+//   order orders @relation([fields: [order_id], referances: [id]])
+//   product products @relation([fields: [product_id], referances: [id]])
+// }
+//
+// model products {
+//   id Int @id
+//   title String
+//   image String
+//   images String @db.Text
+//   description String @db.Text
+//   price Float
+//   quantity Int
+//   short_desc String
+//   cat_id Int
+//
+//   category categories
+// }
+
+model users {
+  id Int @id @default(autoincrement())
+  username String
+  password String
+  email String
+  fname String
+  lname String
+  age Int  @default(18)
+  role Int @default(555)
+  photoUrl String @db.Text
+  type  String  @default("local") 
+  addresses addresses[]
+}
+
+
+

@@ -3,12 +3,66 @@ services:
   mariadb:
     image: mariadb:latest
     ports:
-      - "3306:3306"
+      - "3306"
     volumes:
-      - dbdata6:/data/db
+      - ./dbdata:/data/db
     environment:
       - MARIADB_USER=bilal
       - MARIADB_PASSWORD=root
       - MARIADB_ROOT_PASSWORD=root
-volumes:
-  dbdata6:
+      
+  users-backend:
+    build:
+      context: backend/users
+    ports:
+      - "3000"
+    volumes:
+      - ./backend/users:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - DATABASE_URL=mysql://root:root@mariadb:3306/ecommerce
+
+  orders-backend:
+    build:
+      context: backend/orders
+    ports:
+      - "3000"
+    volumes:
+      - ./backend/orders:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - DATABASE_URL=mysql://root:root@mariadb:3306/ecommerce-orders
+
+  products-backend:
+    build:
+      context: backend/products
+    ports:
+      - "3000"
+    volumes:
+      - ./backend/products:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - DATABASE_URL=mysql://root:root@mariadb:3306/ecommerce-products
+
+  frontend:
+    build:
+      context: frontend
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend/:/usr/src/app
+      - /usr/src/app/node_modules
+    network_mode: host
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports: 
+      - "80:80"
+      - "3000:3000"
+    volumes:
+      - ./nginx/conf:/etc/nginx/conf.d/
+      - ./frontend/dist/client/:/var/www/html/
+
+
+
